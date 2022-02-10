@@ -1,5 +1,6 @@
 package service;
 
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import model.Follow;
 import model.Like;
 import model.Post;
@@ -16,9 +17,9 @@ public class LikeService {
     Scanner scInt = new Scanner(System.in);
     Scanner sc = new Scanner(System.in);
 
-    private static PostRepository postRepository = new PostRepository();
-    private static UserRepository userRepository = new UserRepository();
-    private static LikeRepository likeRepository = new LikeRepository();
+    private static final PostRepository postRepository = new PostRepository();
+    private static final UserRepository userRepository = new UserRepository();
+    private static final LikeRepository likeRepository = new LikeRepository();
 
     public void createLike() {
 
@@ -38,7 +39,8 @@ public class LikeService {
                 System.out.println("Introduceti parola");
             }
                 String parolaIntrodusa = sc.nextLine();
-                if (parolaIntrodusa.equals(myUser.getPassword())) {
+            assert myUser != null;
+            if (parolaIntrodusa.equals(myUser.getPassword())) {
                     likeRepository.createLike(postId, userId);
                 }else{
                     System.out.println("Nu ai introdus o parola valida");
@@ -66,7 +68,7 @@ public class LikeService {
                 if (myPossibleLike == null) {
                     System.out.println("Nu ai dat like la aceasta postare");
                 } else {
-                    likeRepository.deleteLikes(myPossibleLike.getId());
+                    likeRepository.deleteLikesByUser(myPossibleLike.getId());
                 }
             }
         }

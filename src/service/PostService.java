@@ -12,11 +12,11 @@ import java.util.Scanner;
 
 public class PostService {
 
-    private static Scanner sc = new Scanner(System.in);
-    private static Scanner scInt = new Scanner(System.in);
-    private static UserRepository userRepository = new UserRepository();
-    private static PostRepository postRepository = new PostRepository();
-    private static LikeRepository likeRepository = new LikeRepository();
+    private static final Scanner sc = new Scanner(System.in);
+    private static final Scanner scInt = new Scanner(System.in);
+    private static final UserRepository userRepository = new UserRepository();
+    private static final PostRepository postRepository = new PostRepository();
+    private static final LikeRepository likeRepository = new LikeRepository();
 
     public void createPost() {
         System.out.println("Introduceti id-ul de utilizator");
@@ -56,7 +56,7 @@ public class PostService {
                 post.setLikes(likes);
             }
             myUser.setPosts(posts);
-            System.out.println(posts == null ? "Post-ul nu exista" : posts);
+            System.out.println(posts);
         } else {
             System.out.println("User-ul nu exista");
         }
@@ -71,9 +71,13 @@ public class PostService {
             System.out.println("Introduceti id-ul postarii dorite");
             int postId = scInt.nextInt();
             Post myPost = postRepository.readPostById(postId);
+            if(myPost != null) {
                 ArrayList<Like> likes = likeRepository.readLikes(myPost.getId());
                 myPost.setLikes(likes);
-            System.out.println(myPost == null ? "Post-ul nu exista" : myPost);
+                System.out.println(myPost);
+            }else{
+                System.out.println("Postarea nu exista");
+            }
         } else {
             System.out.println("User-ul nu exista");
         }
@@ -109,7 +113,7 @@ public class PostService {
         String parolaIntrodusa = sc.nextLine();
 
         if (parolaIntrodusa.equals(myUser.getPassword()) || parolaIntrodusa.equals(AdminCredentials.adminPass)) {
-            likeRepository.deleteLikes(idUser);
+            likeRepository.deleteLikesByUser(idUser);
             postRepository.deleteAllUserPost(idUser);
         } else {
             System.out.println("Nu ai introdus parola corecta");
@@ -128,7 +132,7 @@ public class PostService {
             int idPost = scInt.nextInt();
             Post myPost = postRepository.readPostById(idPost);
             if (myPost != null) {
-                likeRepository.deleteLikes(idPost);
+                likeRepository.deleteLikesByPost(idPost);
                 postRepository.deletePostById(idPost);
             } else {
                 System.out.println("Postarea cu id-ul " + idPost + " nu exista.");

@@ -14,12 +14,12 @@ import java.util.Scanner;
 
 public class UserService {
 
-    private Scanner sc = new Scanner(System.in);
-    private Scanner scInt = new Scanner(System.in);
-    private UserRepository userRepository = new UserRepository();
-    private PostRepository postRepository = new PostRepository();
-    private LikeRepository likeRepository = new LikeRepository();
-    private FollowRepository followRepository = new FollowRepository();
+    private final Scanner sc = new Scanner(System.in);
+    private final Scanner scInt = new Scanner(System.in);
+    private final UserRepository userRepository = new UserRepository();
+    private final PostRepository postRepository = new PostRepository();
+    private final LikeRepository likeRepository = new LikeRepository();
+    private final FollowRepository followRepository = new FollowRepository();
 
     public void createUser() {
         System.out.println("Introduceti username-ul");
@@ -66,16 +66,15 @@ public class UserService {
         User myUser = userRepository.read_by_id(userId);
 
         if (myUser != null) {
-            ArrayList<Post> posts = postRepository.readUserPost(userId);
+            ArrayList<Post> posts = postRepository.readUserPost(myUser.getId());
             myUser.setPosts(posts);
-            for (Post post : posts) {
-                ArrayList<Like> likes = likeRepository.readLikes(post.getId());
-                post.setLikes(likes);
+            for(Post post : posts) {
+            ArrayList<Like> likes = likeRepository.readLikes(post.getId());
+            post.setLikes(likes);
             }
-            ArrayList<Follow> follows = followRepository.readUserFollowers(userId);
+            ArrayList<Follow> follows = followRepository.readUserFollowers(myUser.getId());
             myUser.setFollows(follows);
         }
-
         System.out.println(myUser == null ? "User-ul nu exista" : myUser);
     }
 
@@ -130,9 +129,10 @@ public class UserService {
         String parolaIntrodusa = sc.nextLine();
 
         if (parolaIntrodusa.equals(myUser.getPassword()) || parolaIntrodusa.equals(AdminCredentials.adminPass)) {
-            postRepository.deleteAllUserPost(id);
-            followRepository.unfollow(id);
-            userRepository.delete(id);
+            likeRepository.deleteLikesByUser(myUser.getId());
+            postRepository.deleteAllUserPost(myUser.getId());
+            followRepository.unfollow(myUser.getId());
+            userRepository.delete(myUser.getId());
         } else {
             System.out.println("Nu ai introdus parola corecta");
         }

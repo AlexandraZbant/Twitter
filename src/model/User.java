@@ -13,6 +13,7 @@ public class User {
     ArrayList <Post> posts;
     ArrayList<Like> likes;
     ArrayList<Follow> follows;
+    int count;
 
     public User(int id, String userName, String firstName, String lastName, String mail, String password) {
         this.id = id;
@@ -90,12 +91,25 @@ public class User {
         this.likes = likes;
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     public ArrayList<Follow> getFollows() {
         return follows;
     }
 
     public void setFollows(ArrayList<Follow> follows) {
         this.follows = follows;
+        if(follows.size() != 0){
+            setCount(follows.size());
+        }else{
+            setCount(0);
+        }
     }
 
     @Override
@@ -110,6 +124,7 @@ public class User {
                 ", posts=" + posts +
                 ", likes=" + likes +
                 ", follows=" + follows +
+                ", count=" + count +
                 '}';
     }
 }

@@ -16,6 +16,7 @@ public class FollowRepository {
     public static final String INVALID_QUERY = "Query invalid";
 
     ResultSet rs = null;
+    int followId =0;
     int userId1 = 0;
     int userId2 = 0;
 
@@ -43,9 +44,10 @@ public class FollowRepository {
             }
             try {
                 while (rs.next()) {
+                    followId = rs.getInt("id");
                     userId1 = rs.getInt("u_id1");
                     userId2 = rs.getInt("u_id2");
-                    follows.add(new Follow(id, userId1, userId2));
+                    follows.add(new Follow(followId, userId1, userId2));
                 }
             } catch (SQLException e) {
             }
@@ -64,11 +66,11 @@ public class FollowRepository {
                 return null;
             }
             try {
-                while (rs.next()) {
+                rs.next();
+                    followId = rs.getInt("id");
                     userId1 = rs.getInt("u_id1");
                     userId2 = rs.getInt("u_id2");
-                    return new Follow(id, userId1, userId2);
-                }
+                    return new Follow(followId, userId1, userId2);
             } catch (SQLException e) {
             }
         }
@@ -81,7 +83,7 @@ public class FollowRepository {
         if (myUpdateStatement != null) {
             try {
                 int affectedRows = myUpdateStatement.executeUpdate(String.format(query, id));
-                System.out.println("Follow-ul a fost sters");
+                System.out.println("Follow-ul " + (affectedRows != 0 ? "" : "nu" ) + " a fost sters");
             } catch (SQLException e) {
                 System.out.println(INVALID_QUERY);
             }

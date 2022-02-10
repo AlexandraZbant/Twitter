@@ -14,9 +14,9 @@ public class LikeRepository {
     public static final String INVALID_QUERY = "Query invalid";
 
     ResultSet rs = null;
+    int likeId = 0;
     int postId = 0;
     int userId = 0;
-    int id = 0;
 
 
     public void createLike(int postId, int userId) {
@@ -43,9 +43,10 @@ public class LikeRepository {
             }
             try {
                 while (rs.next()) {
+                    likeId = rs.getInt("id");
                     postId = rs.getInt("p_id");
                     userId = rs.getInt("u_id");
-                    likes.add(new Like(id, postId, userId));
+                    likes.add(new Like(likeId, postId, userId));
                 }
             } catch (SQLException e) {
 
@@ -64,10 +65,10 @@ public class LikeRepository {
             }
             try {
                 rs.next();
-                id = rs.getInt("id");
+                likeId = rs.getInt("id");
                 userId = rs.getInt("u_id");
                 postId = rs.getInt("p_id");
-                return new Like(id, userId, postId);
+                return new Like(likeId, userId, postId);
             } catch (SQLException e) {
                 return null;
             }
@@ -75,13 +76,25 @@ public class LikeRepository {
         return null;
     }
 
-    public void deleteLikes(int id) {
-        String query = "DELETE FROM like_table WHERE id = '%d'";
+    public void deleteLikesByPost(int id) {
+        String query = "DELETE FROM like_table WHERE p_id = '%d'";
 
         if (myUpdateStatement != null) {
             try {
                 int affectedRow = myUpdateStatement.executeUpdate(String.format(query, id));
-                System.out.println("Like-ul " + (affectedRow != 0 ? "" : "nu") + "a fost sters");
+                System.out.println("Like-ul " + (affectedRow != 0 ? "" : "nu") + " a fost sters");
+            } catch (SQLException e) {
+                System.out.println(INVALID_QUERY);
+            }
+        }
+    }
+    public void deleteLikesByUser(int id) {
+        String query = "DELETE FROM like_table WHERE u_id = '%d'";
+
+        if (myUpdateStatement != null) {
+            try {
+                int affectedRow = myUpdateStatement.executeUpdate(String.format(query, id));
+                System.out.println("Like-ul " + (affectedRow != 0 ? "" : "nu") + " a fost sters");
             } catch (SQLException e) {
                 System.out.println(INVALID_QUERY);
             }

@@ -38,7 +38,6 @@ public class Like {
         this.userId = userId;
     }
 
-
     @Override
     public String toString() {
         return "Like{" +

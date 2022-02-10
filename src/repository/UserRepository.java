@@ -11,7 +11,7 @@ public class UserRepository {
     Statement myReadStatement = DatabaseConnector.getReadStatement();
     Statement myUpdateStatement = DatabaseConnector.getUpdateStatement();
 
-    private static Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
     public static final String INVALID_QUERY = "Querry invalid";
 
     ResultSet rs = null;
@@ -84,8 +84,8 @@ public class UserRepository {
 
         if (myUpdateStatement != null) {
             try {
-                myUpdateStatement.executeUpdate("DELETE FROM user_table WHERE id = " + id);
-                System.out.println("User-ul a fost sters cu succes.");
+                int affectedRows = myUpdateStatement.executeUpdate("DELETE FROM user_table WHERE id = " + id);
+                System.out.println("User-ul " + (affectedRows != 0 ? "" : "nu") + " a fost sters cu succes.");
             } catch (SQLException e) {
                 System.out.println(INVALID_QUERY);
             }

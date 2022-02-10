@@ -10,12 +10,12 @@ import java.util.Scanner;
 
 public class FollowService {
 
-    Scanner scInt = new Scanner(System.in);
-    Scanner sc = new Scanner(System.in);
+    private final Scanner scInt = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
-    private static UserRepository userRepository = new UserRepository();
-    private static PostRepository postRepository = new PostRepository();
-    private static FollowRepository followRepository = new FollowRepository();
+    private static final UserRepository userRepository = new UserRepository();
+    private static final PostRepository postRepository = new PostRepository();
+    private static final FollowRepository followRepository = new FollowRepository();
 
     public void follow() {
         System.out.println("Introduceti id-ul persoanei pe care doriti sa o urmariti:");

@@ -17,6 +17,7 @@ public class PostRepository {
     public static final String INVALID_QUERY = "Query invalid";
 
     ResultSet rs = null;
+    int postId = 0;
     int userId = 0;
     int an = 0;
     int luna = 0;
@@ -50,7 +51,7 @@ public class PostRepository {
             }
             try {
                 while (rs.next()) {
-                    int postId = rs.getInt("id");
+                    postId = rs.getInt("id");
                     String message = rs.getString("message");
                     userId = rs.getInt("u_id");
                     an = rs.getInt("p_year");
@@ -66,16 +67,17 @@ public class PostRepository {
         return post;
     }
 
-    public Post readPostById(int postId) {
+    public Post readPostById(int id) {
 
         if (myReadStatement != null) {
             try {
-                rs = myReadStatement.executeQuery("SELECT * from posts WHERE id = " + postId);
+                rs = myReadStatement.executeQuery("SELECT * from posts WHERE id = " + id);
             } catch (SQLException e) {
                 System.out.println(INVALID_QUERY);
             }
             try {
                 rs.next();
+                postId = rs.getInt("id");
                 String message = rs.getString("message");
                 userId = rs.getInt("u_id");
                 an = rs.getInt("p_year");
@@ -110,8 +112,13 @@ public class PostRepository {
         if (myUpdateStatement != null) {
             try {
                 int affectedRows = myUpdateStatement.executeUpdate("DELETE FROM posts WHERE u_id = " + id);
-                System.out.println((affectedRows == 1 ? "Postarea" : "Postarile ") + " user-ului cu id-ul " + id + " " +
-                        (affectedRows == 1 ? " a fost stearsa." : "au fost sterse."));
+               if (affectedRows >= 1){
+                   System.out.println((affectedRows == 1 ? "Postarea" : "Postarile ") + " user-ului cu id-ul " + id + " " +
+                           (affectedRows == 1 ? " a fost stearsa." : "au fost sterse."));
+               }else{
+                   System.out.println((affectedRows == 0 ? "Postarea" : "Postarile ") + " user-ului cu id-ul " + id + " " +
+                           (affectedRows == 0 ? "nu a fost stearsa." : " nu au fost sterse."));
+               }
             } catch (SQLException e) {
                 System.out.println(INVALID_QUERY);
             }
@@ -121,8 +128,8 @@ public class PostRepository {
     public void deletePostById(int id) {
         if (myUpdateStatement != null) {
             try {
-                myUpdateStatement.executeUpdate("DELETE FROM posts WHERE id = " + id);
-                System.out.println("Postarea cu id-ul " + id + " a fost stearsa.");
+                int affectedRows = myUpdateStatement.executeUpdate("DELETE FROM posts WHERE id = " + id);
+                System.out.println("Postarea cu id-ul " + id + (affectedRows != 0 ? "" : "nu") + " a fost stearsa");
             } catch (SQLException e) {
                 System.out.println(INVALID_QUERY);
             }

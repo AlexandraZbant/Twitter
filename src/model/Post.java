@@ -10,6 +10,8 @@ public class Post {
     int userId;
     LocalDateTime createdAt;
     ArrayList<Like> likes;
+    int count;
+
 
     public Post(int id, String message, int userId, LocalDateTime createdAt) {
         this.id = id;
@@ -51,12 +53,25 @@ public class Post {
         this.createdAt = createdAt;
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     public ArrayList<Like> getLikes() {
         return likes;
     }
 
     public void setLikes(ArrayList<Like> likes) {
          this.likes = likes;
+        if(likes.size() != 0){
+            setCount(likes.size());
+        }else{
+            setCount(0);
+        }
     }
 
 
@@ -68,6 +83,7 @@ public class Post {
                 ", userId=" + userId +
                 ", createdAt=" + createdAt +
                 ", likes=" + likes +
+                ", count=" + count +
                 '}';
     }
 }
